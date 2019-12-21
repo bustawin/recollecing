@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  web-test:
+    build:
+      context: .
+      target: test
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app # So we don't copy code every time
+    image: product-scraper-test
+    environment:
+      DB_URI: postgresql://tester:1234@db/scraper
+    links:
+      - db
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-psql
+    image: product-scraper-db-test
+    restart: always
+    environment:
+      POSTGRES_DB: scraper
+      POSTGRES_USER: tester
+      POSTGRES_PASSWORD: 1234
+

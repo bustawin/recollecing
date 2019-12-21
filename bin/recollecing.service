@@ -1,0 +1,9 @@
+[Unit]
+Description=The recollecing service.
+
+[Service]
+ExecStart=/usr/local/bin/recollecing run
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

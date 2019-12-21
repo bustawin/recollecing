@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  web:
+    build:
+      context: .
+      target: devel
+    image: produuct-scraper-devel
+    volumes:
+      - .:/app # So we don't copy code every time
+    ports:
+      - 8080:80
+    environment:
+      DB_URI: postgresql://scraper:1234@db/scraper
+    links:
+      - db
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-psql
+    image: product-scraper-db
+    restart: on-failure
+    environment:
+      POSTGRES_DB: scraper
+      POSTGRES_USER: scraper
+      POSTGRES_PASSWORD: 1234
+
