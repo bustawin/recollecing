@@ -2,7 +2,7 @@
 Description=The recollecing service.
 
 [Service]
-ExecStart=/usr/local/bin/recollecing run
+ExecStart=/home/pi/.local/bin/reco --db-file /media/usb/db.sqlite run
 Restart=on-failure
 
 [Install]
