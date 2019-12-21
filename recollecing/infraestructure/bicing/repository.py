@@ -1,6 +1,6 @@
 from datetime import datetime
 from time import sleep
-from typing import Optional, Set, Iterator
+from typing import Iterator, Optional
 
 from furl import furl
 from retry_requests import RSession, retry
@@ -24,9 +24,8 @@ class BicingRepo(AbstractBicingRepository):
         self._session: Optional[RSession] = None
 
     def get(self) -> Iterator[model.Update]:
-        now = datetime.now()
-        while now < self.next_update:
-            sleep((self.next_update - now).seconds)
+        while datetime.now() < self.next_update:
+            sleep(2)
         return self._get()
 
     def _get(self) -> Iterator[model.Update]:
