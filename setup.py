@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     python_requires=">=3.6",
     long_description=Path("README.rst").read_text("utf8"),
-    install_requires=["requests", "retry-requests", "furl", "click"],
+    install_requires=["requests", "retry-requests", "furl", "click", "pydantic"],
     extras_require={"test": test_requires},
     tests_require=test_requires,
     setup_requires=["pytest-runner"],
