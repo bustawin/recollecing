@@ -26,10 +26,9 @@ class Update(p.BaseModel):
 
 
 class Response(p.BaseModel):
-    last_updated: datetime
-    next_update: timedelta = p.Field(..., alias='ttl')
-    updates: List[Update] = p.Field(..., alias='data')
+    next_update: timedelta = p.Field(..., alias="ttl")
+    updates: List[Update] = p.Field(..., alias="data")
 
-    @p.validator('updates', pre=True)
+    @p.validator("updates", pre=True)
     def coerce_updates(cls, data):
-        return data['stations']
+        return data["stations"]

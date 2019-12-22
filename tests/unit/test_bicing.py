@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 import pytest
 
@@ -50,7 +51,6 @@ def test_schema_response():
         },
     }
     response = s.Response(**r)
-    assert response.last_updated == datetime.fromtimestamp(1, timezone.utc)
     assert response.next_update == timedelta(seconds=1)
     assert isinstance(response.updates, list)
     assert len(response.updates) == 1
@@ -67,16 +67,28 @@ class FakeSession:
 
 
 @pytest.fixture
-def fake_session():
-    return FakeSession()
-
-
-def test_bicing_repo_fake(fake_session):
-    """Tests the repo against a fixture of the bicing API."""
+def bicing():
     br = BicingRepo()
-    br._session = fake_session
-    updates = list(br.get())
+    br._session = FakeSession()
+    return br
+
+
+def test_bicing_repo_fake(bicing):
+    """Tests the repo against a fixture of the bicing API."""
+    updates = list(bicing.get())
     assert len(updates) == 3
     assert updates[0].station_id == 1
     assert updates[1].station_id == 2
     assert updates[2].station_id == 3
+
+
+def test_next_update(bicing):
+    bicing.next_update = datetime.min + timedelta(seconds=5)
+    with mock.patch(
+        "recollecing.infraestructure.bicing.repository.sleep"
+    ) as sleep, mock.patch(
+        "recollecing.infraestructure.bicing.repository.datetime"
+    ) as dt:
+        dt.now = mock.MagicMock(return_value=datetime.min + timedelta(microseconds=24))
+        bicing.get()
+        sleep.assert_called_once_with(6)

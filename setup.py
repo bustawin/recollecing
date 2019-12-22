@@ -6,7 +6,7 @@ test_requires = ["pytest"]
 
 setup(
     name="recollecing",
-    version="0.0.1",
+    version="0.0.2",
     url="https://github.com/bustawin/recollecing",
     project_urls={
         "Documentation": "https://github.com/bustawin/recollecing",

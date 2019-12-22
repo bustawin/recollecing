@@ -1,7 +1,6 @@
 import sqlite3
 import subprocess
 import tempfile
-from pathlib import Path
 from time import sleep
 
 
@@ -19,7 +18,7 @@ def test_fetch_update():
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE,
         )
-        sleep(5)  # Time for recollecing to process a few updates
+        sleep(3)  # Time for recollecing to process a few updates
         conn.kill()  # Recollecing keeps forever running otherwise
         assert not conn.stderr.readlines()
 

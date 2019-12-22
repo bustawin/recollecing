@@ -1,4 +1,5 @@
 from datetime import datetime
+from math import ceil
 from time import sleep
 from typing import Iterator, Optional
 
@@ -20,19 +21,22 @@ class BicingRepo(AbstractBicingRepository):
 
     def __init__(self) -> None:
         super().__init__()
-        self.next_update: datetime = datetime.now()
+        self.next_update: Optional[datetime] = None
         self._session: Optional[RSession] = None
 
     def get(self) -> Iterator[model.Update]:
-        while datetime.now() < self.next_update:
-            sleep(2)
+        if self.next_update:
+            # Sleep until the next update (+ offset)
+            amount = self.next_update - datetime.now()
+            amount = ceil(amount.total_seconds()) + 1
+            sleep(amount)
         return self._get()
 
     def _get(self) -> Iterator[model.Update]:
         r = self.session.get(self.URL)
         response = schema.Response(**r.json())
         self.next_update = datetime.now() + response.next_update
-        return (model.Update(**u) for u in response.dict()["updates"])
+        return (model.Update(**u.dict()) for u in response.updates)
 
     @property
     def session(self) -> RSession:

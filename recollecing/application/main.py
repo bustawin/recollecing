@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 from typing import Type
 
 from recollecing.application.repository import AbstractBicingRepository
@@ -33,7 +32,6 @@ class Recollecing:
         while True:
             logging.info("New fetching iteration.")
             fetch_update()
-            sleep(0.5)
 
     def init_db(self):
         """Creates a database (does nothing if the database existed)."""
