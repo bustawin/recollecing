@@ -35,6 +35,7 @@ class BicingRepo(AbstractBicingRepository):
                     "We missed the next update (which was at %s).", self.next_update
                 )
             else:
+                logging.info('Sleeping %d seconds', amount)
                 sleep(amount)
         return self._get()
 
