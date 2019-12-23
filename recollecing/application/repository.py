@@ -7,7 +7,7 @@ from recollecing.domain import model as m
 
 class AbstractDbRepository(abc.ABC):
     @abc.abstractmethod
-    def merge(self, *update: m.Update):
+    def create_if_not_exists(self, *update: m.Update):
         """Creates the object(s) in the DB if it does not exist yet,
         otherwise update the values of the existing one.
         """

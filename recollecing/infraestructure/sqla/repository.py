@@ -19,9 +19,8 @@ class SQLARepository(repository.AbstractDbRepository):
         super().__init__()
         self.session: orm.Session = session
 
-    def merge(self, *update: model.Update):
-        for u in update:
-            self.session.merge(u)
+    def create_if_not_exists(self, *update: model.Update):
+        self.session.bulk_insert_mappings(m.Update, (vars(u) for u in update))
 
     def get_one(self, station_id: int, updated: datetime) -> m.Update:
         return (

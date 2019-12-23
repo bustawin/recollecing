@@ -13,7 +13,6 @@ class FetchUpdate:
     def __call__(self):
         updates = self.bicing.get()
         with self.uow:
-            self.uow.updates.merge(*updates)
-            self.uow.flush()
+            self.uow.updates.create_if_not_exists(*updates)
             self.uow.commit()
         logging.info('Successfully fetched updates.')

@@ -17,7 +17,7 @@ class FakeDbRepository(AbstractDbRepository):
         super().__init__()
         self._updates = {}
 
-    def merge(self, *update: model.Update):
+    def create_if_not_exists(self, *update: model.Update):
         for u in update:
             self._updates[(u.station_id, u.updated)] = u
 

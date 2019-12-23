@@ -13,7 +13,7 @@ def test_sqla_psql_create_update(db):
         station_id=1, updated=datetime.min, bikes=1, ebikes=2, free=3, active=True
     )
     with uow:
-        uow.updates.merge(update)
+        uow.updates.create_if_not_exists(update)
         uow.flush()
         uow.commit()
         station_id, updated = update.station_id, update.updated
@@ -32,3 +32,25 @@ def test_sqla_file():
     with tempfile.NamedTemporaryFile() as f:
         e = engine(f.name)
         metadata.create_all(e)
+
+
+def test_sqla_psql_create_if_not_exists(db):
+    """Ensures executing "create_if_not_exists" with the same Update
+    does not duplicate / error.
+    """
+    uow = SQLAlchemyUnitOfWork(db_uri=db)
+    update = m.Update(
+        station_id=1, updated=datetime.min, bikes=1, ebikes=2, free=3, active=True
+    )
+    with uow:
+        uow.updates.create_if_not_exists(update)
+        uow.commit()
+        station_id, updated = update.station_id, update.updated
+
+    with uow:
+        uow.updates.create_if_not_exists(update)
+        uow.commit()
+
+    with uow:
+        # Get one would rise if there are two
+        uow.updates.get_one(station_id, updated)
