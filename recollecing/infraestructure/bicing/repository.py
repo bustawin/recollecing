@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from math import ceil
 from time import sleep
@@ -29,7 +30,12 @@ class BicingRepo(AbstractBicingRepository):
             # Sleep until the next update (+ offset)
             amount = self.next_update - datetime.now()
             amount = ceil(amount.total_seconds()) + 1
-            sleep(amount)
+            if amount <= 0:
+                logging.warning(
+                    "We missed the next update (which was at %s).", self.next_update
+                )
+            else:
+                sleep(amount)
         return self._get()
 
     def _get(self) -> Iterator[model.Update]:
