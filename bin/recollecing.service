@@ -2,7 +2,7 @@
 Description=The recollecing service.
 
 [Service]
-ExecStart=/home/pi/.local/bin/reco --db-file /media/usb/db.sqlite run
+ExecStart=/home/pi/.local/bin/reco --db-file /media/usb/recollecing/db.sqlite run
 Restart=on-failure
 Environment=PYTHONUNBUFFERED=1
 
